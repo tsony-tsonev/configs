@@ -1,0 +1,6 @@
+[user]
+	name = tsonevtsony
+	email = tsonevtsony@gmail.com
+[alias]
+	gerrit-push = "!f() { git push upstream HEAD:refs/for/"$1"; }; f"
+
