@@ -10,6 +10,8 @@
 #ZSH_THEME="random"
 ZSH_THEME="philips"
 
+# export TERM='rxvt-unicode-256color'
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -52,7 +54,7 @@ ZSH_THEME="philips"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colorize cp history mosh)
+plugins=(git colorize cp history mosh mongodb kubectl zsh-autosuggestions zsh-syntax-highlighting zsh-navigation-tools)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -85,4 +87,59 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+##########
+# CUSTOM #
+##########
+
+#custom funct
+function customFuncExample {
+   command=$(pwd)
+
+   #write the output of the command to the buffer
+   BUFFER="$command"
+   CURSOR=$#BUFFER
+}
+#load the func
+zle -N customFuncExample_widget customFuncExample
+#bind the func to key
+bindkey '\ew' customFuncExample_widget
+#double escape press for cancel autocomplete
+bindkey '\e\e' send-break
+
+### zsh-autosuggestions ###
+#autosuggest-accept: Accepts the current suggestion.
+#autosuggest-execute: Accepts and executes the current suggestion.
+#autosuggest-clear: Clears the current suggestion.
+#autosuggest-fetch: Fetches a suggestion (works even when suggestions are disabled).
+#autosuggest-disable: Disables suggestions.
+#autosuggest-enable: Re-enables suggestions.
+#autosuggest-toggle: Toggles between enabled/disabled suggestions.
+bindkey '^ ' autosuggest-accept
+### ZAW ###
+source /home/tsony-tsonev/.oh-my-zsh/plugins/zaw/zaw.zsh
+bindkey '^R' zaw-history
+zstyle ':filter-select' max-lines 10
+zstyle ':filter-select' hist-find-no-dups yes # ignore duplicates in history source
+zstyle ':filter-select' escape-descriptions no # display literal newlines, not \n, etc
+
+# VIM PATHOGEN export import update plugins
+alias vplug-update=" ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} pull"
+alias vplug-export="ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} remote -v | sed 's/^origin//' | sed 's/(fetch)*$//' | sed 's/(push)*$//' | uniq | sed 's/^[ \t ]*//;s/[ \t ]*$//' > vim-plugins"
+function gitBulkClone {
+    curDir=`pwd`
+    cd ~/.vim/bundle
+    while read repo; do
+        git clone "$repo"
+    done < ~/vim-plugins
+    cd $curDir
+}
+alias vplug-import=gitBulkClone
+
+#Go
+export GOPATH=$HOME/workspace/go/
+export GOROOT=$HOME/development/go
+export PROTOC=$HOME/development/protoc/bin
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$PROTOC
+
+alias ttmux="tmux new-session \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; split-window -h \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; split-window -v  \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; split-window -v -t 1 \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; new-window \; send-keys 'tail -f /var/log/mongodb/mongod.log' 'C-m' \; split-window -h \; send-keys 'sudo service mongod start && mongo' 'C-m'"
 
