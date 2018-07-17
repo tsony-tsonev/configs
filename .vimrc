@@ -87,8 +87,6 @@ set undoreload=10000        " number of lines to save for undo
 "------INSERT MODE
 " fix backspace key
 set backspace=indent,eol,start
-"shitch last buffers in insert mode
-inoremap <C-z> <C-O> <C-O><C-^>
 "go to begin of line
 inoremap II <Esc>I
 "go to end of line
@@ -122,8 +120,7 @@ inoremap ;ff <Esc>zajA
 inoremap ;fa <Esc>zmjA
 inoremap ;fu <Esc>zrkkA
 "show/close go doc
-inoremap qq <C-O>:GoDoc<CR>
-inoremap QQ <C-O><C-W>c
+inoremap QQ <C-O>:GoDoc<CR>
 "go to bottom of file
 inoremap GG <C-O>G
 "go to top of file
@@ -131,10 +128,6 @@ inoremap Gg <C-O>gg
 " forward and backward search
 inoremap FF <C-O>f
 inoremap Ff <C-O>F
-"force close buffer (not saving changes)
-inoremap ;xx <C-O>:bd!<CR>
-"write and close buffer
-inoremap ;xw <Esc>:w\|bd<CR>i
 "go to begin of word
 inoremap BB <C-O>b
 "go to end of word
@@ -152,18 +145,37 @@ inoremap LL <C-O>:GoCallees<CR>
 " switch opened windows
 inoremap ZZ <C-O><C-W><C-W>
 "select word, then + or - to expand shrint selection (vim-expand-region required)
-inoremap WW <C-O>:normal +<CR>
+" inoremap WW <C-O>:normal +<CR>
+" switch window with WW + plus direction h/j/k/l
+inoremap WW <C-O><C-W>
 "run test (neads vim-test plugin)
+":TestFile :TestSuite :TestLast :TestVisit
 inoremap TT <C-O>:TestNearest<CR>
+"shitch last buffers in insert mode
+inoremap <C-z> <C-O> <C-O><C-^>
+" delete/next/previous buffer
+inoremap ;bd <C-O>:bd<CR>
+inoremap ;bn <C-O>:bn<CR>
+inoremap ;bp <C-O>:bp<CR>
+"force close buffer (not saving changes)
+inoremap ;bdd <C-O>:bd!<CR>
+"write, write and close buffer
+inoremap ;bw <C-O>:w<CR>
+inoremap ;bwd <C-O>:w\|bd<CR>
 "------INSERT MODE
-" next entrie in a list
-map <C-n> :cnext<CR>
-" previous entry in a list
-map <C-m> :cprevious<CR>
 " close the list
+inoremap ;qq <C-O><C-W>c
 nnoremap <leader>q :cclose<CR>
 " open quickfix
 nnoremap <leader>w :copen<CR>
+
+" ------VIM-TEST----------
+" let g:test#preserve_screen = 1
+" let g:test#strategy = 'vimterminal'
+" let test#filename_modifier = ':.' " test/models/user_test.rb (default)
+" let test#filename_modifier = ':p' " /User/janko/Code/my_project/test/models/user_test.rb
+" let test#filename_modifier = ':~' "~/Code/my_project/test/models/user_test.rb
+"-------VIM-TEST----------
 
 "--------------TEXT EDITING----------------
 
@@ -243,6 +255,28 @@ let g:go_metalinter_deadline = "5s"
 " auto close vim id the tree is the only one left window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 noremap <C-l> :NERDTreeToggle<CR>
+
+" auto open tree and focus on opened view after starting (instead of NERDTree)
+autocmd VimEnter * call s:syncTree()
+au VimEnter * :wincmd w
+
+" always highlight active buffer file in the NERDTree
+" calls NERDTreeFind iff NERDTree is active, current window contains a modifiable file, and we're not in vimdiff
+function! s:syncTree()
+  let s:curwnum = winnr()
+  NERDTreeFind
+  exec s:curwnum . "wincmd w"
+endfunction
+" " Highlight currently open buffer in NERDTree
+" autocmd BufEnter * call SyncTree()
+function! s:syncTreeIf()
+  if (winnr("$") > 1)
+    call s:syncTree()
+  endif
+endfunction
+  
+" Shows NERDTree on start and synchronizes the tree with opened file when switching between opened windows
+autocmd BufEnter * call s:syncTreeIf()
 "------------NERD-TREE--------------
 
 " Autocompletion
