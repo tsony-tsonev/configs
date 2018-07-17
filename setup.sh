@@ -3,9 +3,12 @@
 sudo apt-get -y remove vim vim-runtime gvim
 # install deps for manually building vim
 sudo apt-get -y install liblua5.1-dev luajit libluajit-5.1 python-dev ruby-dev libperl-dev libncurses5-dev libatk1.0-dev libx11-dev libxpm-dev libxt-dev python2.7 python-pip
+sudo mkdir /usr/include/lua5.1/include
+sudo cp /usr/include/lua5.1/* /usr/include/lua5.1/include
 git clone https://github.com/vim/vim.git
 cd vim
 sudo make uninstall # remove previous custom builds if any
+make distclean
 ./configure --with-features=huge \
             --enable-rubyinterp \
             --enable-largefile \
@@ -27,7 +30,7 @@ chsh -s $(which zsh)
 # zsh plugin manager
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 # install tmux
-sudo apt-get -y install tmux curl
+sudo apt-get -y install tmux curl xclip
 # tmux plugin manager
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # install tmux nord theme
@@ -35,6 +38,7 @@ git clone https://github.com/arcticicestudio/nord-tmux ~/.tmux/themes/nord-tmux
 # vim plugin manager
 mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 # install vim fonts
+# note: do not forget to set terminal emulator font to DroidSansMono
 mkdir ~/.local/share/fonts && cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
 # install vim-tagbar deps
 sudo apt-get -y install exuberant-ctags
