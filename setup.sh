@@ -29,12 +29,29 @@ sudo apt-get -y install zsh
 chsh -s $(which zsh)
 # zsh plugin manager
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+git clone git://github.com/zsh-users/zaw.git ~/.oh-my-zsh/plugins/zaw
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
 # install tmux
-sudo apt-get -y install tmux curl xclip
+sudo apt-get -y install curl xclip
+TMUX_VERSION=2.5
+sudo apt-get -y remove tmux
+sudo apt-get -y install wget tar libevent-dev libncurses-dev
+wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz
+tar xf tmux-${TMUX_VERSION}.tar.gz
+rm -f tmux-${TMUX_VERSION}.tar.gz
+cd tmux-${TMUX_VERSION}
+./configure
+make
+sudo make install
+cd -
+sudo rm -rf /usr/local/src/tmux-*
+sudo mv tmux-${TMUX_VERSION} /usr/local/src
 # tmux plugin manager
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tmux-sensible ~/.tmux/plugins/tmux-sensible
 # install tmux nord theme
-git clone https://github.com/arcticicestudio/nord-tmux ~/.tmux/themes/nord-tmux
+git clone https://github.com/arcticicestudio/nord-tmux ~/.tmux/plugins/nord-tmux
 # vim plugin manager
 mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 # install vim fonts
