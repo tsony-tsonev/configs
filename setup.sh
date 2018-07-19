@@ -33,7 +33,7 @@ git clone git://github.com/zsh-users/zaw.git ~/.oh-my-zsh/plugins/zaw
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
 # install tmux
-sudo apt-get -y install curl xclip
+sudo apt-get -y install curl xclip python-pygments
 TMUX_VERSION=2.5
 sudo apt-get -y remove tmux
 sudo apt-get -y install wget tar libevent-dev libncurses-dev
@@ -63,5 +63,5 @@ sudo apt-get -y install exuberant-ctags
 ln -s `pwd`/vim-plugins ~/vim-plugins
 ln -s `pwd`/.vimrc ~/.vimrc
 ln -s `pwd`/.tmux.conf ~/.tmux.conf
-cp .zshrc ~/.zshrc
+ln -s `pwd`/.zshrc ~/.zshrc
 

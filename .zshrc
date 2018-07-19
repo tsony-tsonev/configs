@@ -91,6 +91,9 @@ source $ZSH/oh-my-zsh.sh
 # CUSTOM #
 ##########
 
+# import private aliasess and configs
+source $HOME/.zsh_private
+
 #custom funct
 function customFuncExample {
    command=$(pwd)
@@ -116,7 +119,7 @@ bindkey '\e\e' send-break
 #autosuggest-toggle: Toggles between enabled/disabled suggestions.
 bindkey '^ ' autosuggest-accept
 ### ZAW ###
-source /home/tsony-tsonev/.oh-my-zsh/plugins/zaw/zaw.zsh
+source $HOME/.oh-my-zsh/plugins/zaw/zaw.zsh
 bindkey '^R' zaw-history
 zstyle ':filter-select' max-lines 10
 zstyle ':filter-select' hist-find-no-dups yes # ignore duplicates in history source
@@ -134,6 +137,8 @@ function gitBulkClone {
     cd $curDir
 }
 alias vplug-import=gitBulkClone
+# depends on python-pygments
+alias cat="colorize"
 
 #Go
 export GOPATH=$HOME/workspace/go/
@@ -141,5 +146,4 @@ export GOROOT=$HOME/development/go
 export PROTOC=$HOME/development/protoc/bin
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$PROTOC
 
-alias ttmux="tmux new-session \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; split-window -h \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; split-window -v  \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; split-window -v -t 1 \; send-keys 'cd /home/tsony-tsonev/workspace/go/src/bitbucket.org/taxime' 'C-m' \; new-window \; send-keys 'tail -f /var/log/mongodb/mongod.log' 'C-m' \; split-window -h \; send-keys 'sudo service mongod start && mongo' 'C-m'"
 
