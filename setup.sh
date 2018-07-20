@@ -41,6 +41,7 @@ wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_
 tar xf tmux-${TMUX_VERSION}.tar.gz
 rm -f tmux-${TMUX_VERSION}.tar.gz
 cd tmux-${TMUX_VERSION}
+sudo make uninstall
 ./configure
 make
 sudo make install
