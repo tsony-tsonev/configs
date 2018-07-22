@@ -23,7 +23,7 @@ make distclean
             --enable-cscope
 sudo make install
 cd ..
-rm -rf vim
+sudo rm -rf vim
 # install and change to zsh
 sudo apt-get -y install zsh
 chsh -s $(which zsh)
@@ -61,8 +61,12 @@ mkdir ~/.local/share/fonts && cd ~/.local/share/fonts && curl -fLo "Droid Sans M
 # install vim-tagbar deps
 sudo apt-get -y install exuberant-ctags
 # simlink and proper files
+rm ~/.vimrc
+rm ~/.tmux.conf
+rm ~/.zshrc
+rm ~/vim-plugins
 ln -s `pwd`/vim-plugins ~/vim-plugins
 ln -s `pwd`/.vimrc ~/.vimrc
 ln -s `pwd`/.tmux.conf ~/.tmux.conf
 ln -s `pwd`/.zshrc ~/.zshrc
-
+touch .zsh_private

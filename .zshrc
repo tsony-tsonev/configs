@@ -138,7 +138,9 @@ function gitBulkClone {
 }
 alias vplug-import=gitBulkClone
 # depends on python-pygments
-alias cat="colorize"
+# alias cat="colorize"
+alias cat="colorize_via_pygmentize"
+
 
 #Go
 export GOPATH=$HOME/workspace/go/
