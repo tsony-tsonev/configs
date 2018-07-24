@@ -29,9 +29,10 @@ sudo apt-get -y install zsh
 chsh -s $(which zsh)
 # zsh plugin manager
 sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-git clone git://github.com/zsh-users/zaw.git ~/.oh-my-zsh/plugins/zaw
-git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+git clone git://github.com/zsh-users/zaw.git ~/.oh-my-zsh/custom/plugins/zaw
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+git clone https://github.com/JamesKovacs/zsh_completions_mongodb.git ~/.oh-my-zsh/custom/plugins/mongodb
 # install tmux
 sudo apt-get -y install curl xclip python-pygments
 TMUX_VERSION=2.5
