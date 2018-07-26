@@ -151,8 +151,8 @@ inoremap WW <C-O><C-W>
 "run test (neads vim-test plugin)
 ":TestFile :TestSuite :TestLast :TestVisit
 inoremap TT <C-O>:TestNearest<CR>
-"shitch last buffers in insert mode
-inoremap <C-z> <C-O> <C-O><C-^>
+"switch last buffers in insert mode
+inoremap <C-^> <C-O> <C-O><C-^>
 " delete/next/previous buffer
 inoremap ;bd <C-O>:bd<CR>
 inoremap ;bn <C-O>:bn<CR>
@@ -162,6 +162,11 @@ inoremap ;bdd <C-O>:bd!<CR>
 "write, write and close buffer
 inoremap ;bw <C-O>:w<CR>
 inoremap ;bwd <C-O>:w\|bd<CR>
+"go to top and bottom of file
+inoremap ;gg <C-O>gg
+inoremap ;G <C-O>G
+"quick command
+inoremap ;; <C-O>:
 "------INSERT MODE
 " close the list
 inoremap ;qq <C-O><C-W>c
@@ -507,6 +512,7 @@ vnoremap > >gv
 "------------ACK-----------------
 cnoreabbrev Ack Ack!
 nnoremap <Leader>a :Ack!<Space>
+"       \ 'gv': '<C-W><CR><C-W>L<C-W>p<C-W>J' }
 "------------ACK-----------------
 
 "------------SNIPPETS----------
