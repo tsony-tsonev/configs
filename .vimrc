@@ -151,6 +151,8 @@ inoremap WW <C-O><C-W>
 "run test (neads vim-test plugin)
 ":TestFile :TestSuite :TestLast :TestVisit
 inoremap TT <C-O>:TestNearest<CR>
+" CUSOMT remove if not used
+inoremap Tt <C-O>:TestNearest -config=`pwd`/config-local.json<CR>
 "switch last buffers in insert mode
 inoremap <C-^> <C-O> <C-O><C-^>
 " delete/next/previous buffer
@@ -175,11 +177,23 @@ nnoremap <leader>q :cclose<CR>
 nnoremap <leader>w :copen<CR>
 
 " ------VIM-TEST----------
-" let g:test#preserve_screen = 1
-" let g:test#strategy = 'vimterminal'
-" let test#filename_modifier = ':.' " test/models/user_test.rb (default)
-" let test#filename_modifier = ':p' " /User/janko/Code/my_project/test/models/user_test.rb
-" let test#filename_modifier = ':~' "~/Code/my_project/test/models/user_test.rb
+" fix orders of command arguments
+" by defualt :TestNearest puts the -run 'TestName$' at the end of the command
+" but if we provie some flags like :TestNearest -foo=bar
+" they must be provided after the -run 'TestName$'
+" this fix depends entirly on the fact that vim-test plugin
+" is putting the -run 'TestName' part at the end of the command
+function! GoTransform(cmd) abort
+    let runArgIdx = stridx(a:cmd, '-run')
+    let runArgs = strpart(a:cmd, runArgIdx)
+    let cmdPart = strpart(a:cmd, 0, runArgIdx)
+    return "go test " . runArgs . strpart(cmdPart, len("go test"))
+endfunction
+
+let g:test#custom_transformations = {'go': function('GoTransform')}
+let g:test#transformation = 'go'
+" preserv logs from previous test runs
+let g:test#preserve_screen = 1
 "-------VIM-TEST----------
 
 "--------------TEXT EDITING----------------
