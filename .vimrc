@@ -150,17 +150,18 @@ inoremap :: <C-O>:
 "go to mark
 inoremap ;; <C-O>'
 "switch last buffers in insert mode
-inoremap <C-^> <C-O> <C-O><C-^>
+inoremap <C-^> <Esc> <C-^>i
 " fold toggle, fold all, unfolf all
 inoremap ;ff <Esc>zajA
 inoremap ;fa <Esc>zmjA
 inoremap ;fu <Esc>zrkkA
 " delete/next/previous buffer
-inoremap ;bd <C-O>:bd<CR>
+inoremap ;bd <Esc>:bp<CR>:bd #<CR>i
 inoremap ;bn <C-O>:bn<CR>
 inoremap ;bp <C-O>:bp<CR>
 "force close buffer (not saving changes)
-inoremap ;bdd <C-O>:bd!<CR>
+"switch to previous buffer and then closing it due to bug with NERDTree
+inoremap ;bdx <Esc>:bp<CR>:bd! #<CR>i
 "write, write and close buffer
 inoremap ;bw <C-O>:w<CR>
 inoremap ;bwd <C-O>:w\|bd<CR>
