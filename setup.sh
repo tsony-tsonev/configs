@@ -71,3 +71,5 @@ ln -s `pwd`/.vimrc ~/.vimrc
 ln -s `pwd`/.tmux.conf ~/.tmux.conf
 ln -s `pwd`/.zshrc ~/.zshrc
 touch .zsh_private
+# needed for the vim 8+ persistent undo history
+mkdir ~/.vim/undo

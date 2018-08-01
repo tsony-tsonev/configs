@@ -1,5 +1,3 @@
-" use pathogen - required by apt-vim
-
 " example insert output of command
 ":imap <F2> <C-R>=system('ls -lah')<C-M>
 
@@ -26,14 +24,17 @@ filetype off                  " required
 filetype plugin indent on
 syntax on               "enable languages syntax
 syntax enable
+
+" fix backspace key
+set backspace=indent,eol,start
 set ttimeoutlen=50      "faster switch to normal mode
 set mouse=a             "fix mouse scroll in tmux
 set number              "show line number
-set autowrite   "autowrite changes
+set autowrite           "autowrite changes
 "set paste              "paste without commenting by default   breaks neocomplete
 set nocompatible
 set nobackup
-" set showmatch           "show matching brackets
+set showmatch           "show matching brackets
 set ignorecase
 set showmode
 set ts=4
@@ -85,76 +86,75 @@ set undoreload=10000        " number of lines to save for undo
 
 "--------------TEXT EDITING----------------
 "------INSERT MODE
-" fix backspace key
-set backspace=indent,eol,start
-"go to begin of line
-inoremap II <Esc>I
-"go to end of line
-inoremap AA <Esc>A
-"create new line one the next row
-inoremap OO <Esc>o
-"delete from cursor to the EOL
-inoremap CC <Esc>ld$a
-"delete whole line and stay on it
-inoremap SS <Esc>S
-"delete line
-inoremap DD <Esc>ddi
-"copy line
-inoremap YY <Esc>yya
-"paste
-inoremap PP <Esc>pa
-"undo
-inoremap UU <C-O>u
-"redo
-inoremap RR <Esc><C-R>a
-"forward delete
-inoremap XX <Esc>lxi
-"move line down
-inoremap JJ <Esc>:m .+1<CR>==gi
-"move line up
-inoremap KK <Esc>:m .-2<CR>==gi
-"enter visual than go back to insert mode
-inoremap VV <C-O>v
-" fold toggle, fold all, unfolf all
-inoremap ;ff <Esc>zajA
-inoremap ;fa <Esc>zmjA
-inoremap ;fu <Esc>zrkkA
+"---LETTER KEYS--- sorted Q-P A-L Z-M
 "show/close go doc
 inoremap QQ <C-O>:GoDoc<CR>
-"go to bottom of file
-inoremap GG <C-O>G
-"go to top of file
-inoremap Gg <C-O>gg
-" forward and backward search
-inoremap FF <C-O>f
-inoremap Ff <C-O>F
-"go to begin of word
-inoremap BB <C-O>b
-"go to end of word
-inoremap EE <Esc>ea
-"create mark
-inoremap MM <C-O>m
-"go to mark
-inoremap '' <C-O>'
-" go to definition
-inoremap HH <C-O>:GoDef<CR>
-" find usages
-inoremap NN <C-O>:GoCallers<CR>
-" find possible callers based on the definition under the cursor
-inoremap LL <C-O>:GoCallees<CR>
-" switch opened windows
-inoremap ZZ <C-O><C-W><C-W>
 "select word, then + or - to expand shrint selection (vim-expand-region required)
 " inoremap WW <C-O>:normal +<CR>
 " switch window with WW + plus direction h/j/k/l
 inoremap WW <C-O><C-W>
+"go to end of word
+inoremap EE <Esc>ea
+"redo
+inoremap RR <Esc><C-R>a
 "run test (neads vim-test plugin)
 ":TestFile :TestSuite :TestLast :TestVisit
 inoremap TT <C-O>:TestNearest<CR>
 " CUSOMT remove if not used
 inoremap Tt <C-O>:TestNearest -config=`pwd`/config-local.json<CR>
+"copy line
+inoremap YY <Esc>yya
+"undo
+inoremap UU <C-O>u
+"go to begin of line
+inoremap II <Esc>I
+"create new line one the next row
+inoremap OO <Esc>o
+"paste
+inoremap PP <Esc>pa
+"go to end of line
+inoremap AA <Esc>A
+"delete whole line and stay on it
+inoremap SS <Esc>S
+"delete line
+inoremap DD <Esc>ddi
+" forward and backward search
+inoremap FF <C-O>f
+inoremap Ff <C-O>F
+" inoremap GG <C-O>
+" go to definition
+inoremap HH <C-O>:GoDef<CR>
+"move line down
+inoremap JJ <Esc>:m .+1<CR>==gi
+" move line up
+inoremap KK <Esc>:m .-2<CR>==gi
+" find possible callers based on the definition under the cursor
+inoremap LL <C-O>:GoCallees<CR>
+" switch opened windows
+inoremap ZZ <C-O><C-W><C-W>
+"forward delete
+inoremap XX <Esc>lxi
+"delete from cursor to the EOL
+inoremap CC <Esc>ld$a
+"enter visual than go back to insert mode
+inoremap VV <C-O>v
+"go to begin of word
+inoremap BB <C-O>b
+" find usages
+inoremap NN <C-O>:GoCallers<CR>
+"create mark
+inoremap MM <C-O>m
+"---LETTER KEYS---
+"quick command
+inoremap :: <C-O>:
+"go to mark
+inoremap ;; <C-O>'
 "switch last buffers in insert mode
 inoremap <C-^> <C-O> <C-O><C-^>
+" fold toggle, fold all, unfolf all
+inoremap ;ff <Esc>zajA
+inoremap ;fa <Esc>zmjA
+inoremap ;fu <Esc>zrkkA
 " delete/next/previous buffer
 inoremap ;bd <C-O>:bd<CR>
 inoremap ;bn <C-O>:bn<CR>
@@ -167,14 +167,9 @@ inoremap ;bwd <C-O>:w\|bd<CR>
 "go to top and bottom of file
 inoremap ;gg <C-O>gg
 inoremap ;G <C-O>G
-"quick command
-inoremap ;; <C-O>:
-"------INSERT MODE
-" close the list
+" close window
 inoremap ;qq <C-O><C-W>c
-nnoremap <leader>q :cclose<CR>
-" open quickfix
-nnoremap <leader>w :copen<CR>
+"------INSERT MODE
 
 " ------VIM-TEST----------
 " fix orders of command arguments
@@ -206,7 +201,11 @@ autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 " make all lists of type quickfix so we can use only one shourtuct for moving
 " through all the kinds of lists
 let g:go_list_type = "quickfix"
-" let test#go#runner = 'ginkgo'
+
+nnoremap <leader>q :cclose<CR>
+" open quickfix
+nnoremap <leader>w :copen<CR>
+
 noremap <leader>i :GoDoc<CR>
 noremap <leader>T :GoAlternate<CR>
 
@@ -276,8 +275,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 noremap <C-l> :NERDTreeToggle<CR>
 
 " auto open tree and focus on opened view after starting (instead of NERDTree)
-autocmd VimEnter * call s:syncTree()
-au VimEnter * :wincmd w
+" autocmd VimEnter * call s:syncTree()
+" au VimEnter * :wincmd w
 
 " always highlight active buffer file in the NERDTree
 " calls NERDTreeFind iff NERDTree is active, current window contains a modifiable file, and we're not in vimdiff
@@ -411,7 +410,6 @@ function! MyFoldText() " {{{
     return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
 endfunction " }}}
 set foldtext=MyFoldText()
-
 "---------FOLD----------
 
 "---------TAG-BAR----------
@@ -526,7 +524,6 @@ vnoremap > >gv
 "------------ACK-----------------
 cnoreabbrev Ack Ack!
 nnoremap <Leader>a :Ack!<Space>
-"       \ 'gv': '<C-W><CR><C-W>L<C-W>p<C-W>J' }
 "------------ACK-----------------
 
 "------------SNIPPETS----------
@@ -562,7 +559,7 @@ imap ;th req := httptest.NewRequest("GET", "http://example.com", bytes.NewReader
             \if err != nil {<CR>t.Error("Error reading response body", err)}<CR><Up><Up><Up><Up><Up><Up><Up>
 imap ;nh func (w http.ResponseWriter, r *http.Request) {<CR>}<Up><Up><Right><Right><Right><Right>
 
-" call s:run_guru(args)
+"---extract golang variable
 function! s:guru_cmd(args) range abort
     let mode = a:args.mode
     let format = a:args.format
@@ -812,8 +809,9 @@ function! Info()
 
     call s:sync_guru(l:args)
 endfunction
-
 imap <F3> <C-O>:call Info()<CR>
+"---extract golang variable
+"
 "------------SNIPPETS----------
 
 
