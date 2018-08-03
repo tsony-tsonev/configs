@@ -170,7 +170,20 @@ inoremap ;gg <C-O>gg
 inoremap ;G <C-O>G
 " close window
 inoremap ;qq <C-O><C-W>c
+" quick search
+inoremap ;/ <Esc>/
+" search with ack
+inoremap ;ac <Esc>:Ack! 
 "------INSERT MODE
+
+"----Stock File Tree--------
+" NERDTree like setup
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+"----Stock File Tree--------
 
 " ------VIM-TEST----------
 " fix orders of command arguments
@@ -275,27 +288,15 @@ let g:go_metalinter_deadline = "5s"
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 noremap <C-l> :NERDTreeToggle<CR>
 
-" auto open tree and focus on opened view after starting (instead of NERDTree)
-" autocmd VimEnter * call s:syncTree()
-" au VimEnter * :wincmd w
-
-" always highlight active buffer file in the NERDTree
-" calls NERDTreeFind iff NERDTree is active, current window contains a modifiable file, and we're not in vimdiff
 function! s:syncTree()
-  let s:curwnum = winnr()
-  NERDTreeFind
-  exec s:curwnum . "wincmd w"
-endfunction
-" " Highlight currently open buffer in NERDTree
-" autocmd BufEnter * call SyncTree()
-function! s:syncTreeIf()
   if (winnr("$") > 1)
-    call s:syncTree()
+    let s:curwnum = winnr()
+    NERDTreeFind
+    exec s:curwnum . "wincmd w"
   endif
 endfunction
-  
-" Shows NERDTree on start and synchronizes the tree with opened file when switching between opened windows
-autocmd BufEnter * call s:syncTreeIf()
+" sync nerd tree to highlight the opened buffer only if tree is opened
+autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1) | call s:syncTree() | endif
 "------------NERD-TREE--------------
 
 " Autocompletion
@@ -524,7 +525,7 @@ vnoremap > >gv
 
 "------------ACK-----------------
 cnoreabbrev Ack Ack!
-nnoremap <Leader>a :Ack!<Space>
+nnoremap <Leader>ac :Ack!<Space>
 "------------ACK-----------------
 
 "------------SNIPPETS----------
