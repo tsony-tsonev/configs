@@ -168,12 +168,16 @@ inoremap ;bwd <C-O>:w\|bd<CR>
 "go to top and bottom of file
 inoremap ;gg <C-O>gg
 inoremap ;G <C-O>G
+" switch from test to source and the opposite
+inoremap ;T <Esc>:GoAlternate<CR>a
 " close window
 inoremap ;qq <C-O><C-W>c
 " quick search
 inoremap ;/ <Esc>/
 " search with ack
-inoremap ;ac <Esc>:Ack! 
+inoremap ;ac <Esc>:Ack!
+" togge nerd tree
+inoremap !! <Esc>:NERDTreeToggle<CR><C-W>la
 "------INSERT MODE
 
 "----Stock File Tree--------
