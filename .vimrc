@@ -109,6 +109,13 @@ if v:version >= 700
     autocmd BufLeave * call AutoSaveWinView()
     autocmd BufEnter * call AutoRestoreWinView()
 endif
+
+" persist folds between vim sessions
+augroup AutoSaveFolds
+  autocmd!
+  autocmd BufWinLeave * mkview
+  autocmd BufWinEnter * silent loadview
+augroup END
 "----------GENERAL--------------
 
 
@@ -180,9 +187,9 @@ inoremap ;; <C-O>'
 "switch last buffers in insert mode
 inoremap <C-^> <Esc> <C-^>i
 " fold toggle, fold all, unfolf all
-inoremap ;ff <Esc>zajA
-inoremap ;fa <Esc>zmjA
-inoremap ;fu <Esc>zrkkA
+inoremap ;za <Esc>zajA
+inoremap ;zm <Esc>zmjA
+inoremap ;zr <Esc>zrkkA
 " delete/next/previous buffer
 inoremap ;bd <Esc>:bp<CR>:bd #<CR>i
 inoremap ;bn <C-O>:bn<CR>
