@@ -169,7 +169,8 @@ inoremap DD <Esc>ddi
 " forward and backward search
 inoremap FF <C-O>f
 inoremap Ff <C-O>F
-" inoremap GG <C-O>
+" golang rename variable
+inoremap GG <C-O>:GoRename<CR>
 " go to definition
 inoremap HH <C-O>:GoDef<CR>
 "move line down
@@ -339,6 +340,9 @@ let g:go_metalinter_deadline = "5s"
 " auto close vim id the tree is the only one left window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 noremap <C-l> :NERDTreeToggle<CR>
+
+" toggling packages, and not opening files on single click
+let g:NERDTreeMouseMode=2
 
 function! s:syncTree()
   if (winnr("$") > 1)
