@@ -25,5 +25,6 @@ git@github.com:tpope/vim-fugitive.git
 git://github.com/airblade/vim-gitgutter.git
 https://github.com/fatih/vim-go.git
 git@github.com:severin-lemaignan/vim-minimap.git
+git@github.com:osyo-manga/vim-over.git
 git@github.com:kshenoy/vim-signature.git
 git@github.com:janko-m/vim-test.git
