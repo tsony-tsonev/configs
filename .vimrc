@@ -182,8 +182,8 @@ inoremap HH <C-O>:GoDef<CR>
 inoremap JJ <Esc>:m .+1<CR>==gi
 " move line up
 inoremap KK <Esc>:m .-2<CR>==gi
-" find possible callers based on the definition under the cursor
-inoremap LL <C-O>:GoCallees<CR>
+" find implements or implementators
+inoremap LL <C-O>:GoImplements<CR>
 " switch opened windows
 inoremap ZZ <C-O><C-W><C-W>
 "forward delete
