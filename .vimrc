@@ -113,9 +113,14 @@ endif
 " persist folds between vim sessions
 augroup AutoSaveFolds
   autocmd!
-  autocmd BufWinLeave * mkview
-  autocmd BufWinEnter * silent loadview
-augroup END
+  " view files are about 500 bytes
+  " bufleave but not bufwinleave captures closing 2nd tab
+  " nested is needed by bufwrite* (if triggered via other autocmd)
+  autocmd BufWinLeave,BufLeave,BufWritePost ?* nested silent! mkview!
+  autocmd BufWinEnter ?* silent! loadview
+augroup end
+set viewoptions=folds,cursor
+set sessionoptions=folds
 
 " keep cursor position per buffer between sessions
 function! ResCur()
