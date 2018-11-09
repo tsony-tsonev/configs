@@ -30,7 +30,7 @@ set backspace=indent,eol,start
 set ttimeoutlen=50      "faster switch to normal mode
 set mouse=a             "fix mouse scroll in tmux
 set number              "show line number
-set autowrite           "autowrite changes
+" set autowrite           "autowrite changes
 "set paste              "paste without commenting by default   breaks neocomplete
 set nocompatible
 set nobackup
@@ -233,6 +233,121 @@ inoremap ;ac <Esc>:Ack!
 " togge nerd tree
 inoremap !! <Esc>:NERDTreeToggle<CR><C-W>la
 "------INSERT MODE
+"--------------TEXT EDITING----------------
+
+"----------NERDTree Git------------
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1  "enables nodes icons
+let g:DevIconsEnableFoldersOpenClose = 1 "enables different icon for expandable/not expandable icons
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
+let g:NERDTreeDirArrowExpandable = nr2char(8200)  "sets expandable character to none - hides it
+let g:NERDTreeDirArrowCollapsible = nr2char(8200)  "sets collapsible character to none - hides it
+
+" nerdtree highlight not only icons but also file names
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+let g:NERDTreeSyntaxDisableDefaultExtensions = 1
+let g:NERDTreeDisableExactMatchHighlight = 1
+let g:NERDTreeDisablePatternMatchHighlight = 1
+let g:NERDTreeSyntaxEnabledExtensions = ['go', 'js', 'css', 'py', 'sh']
+
+
+let g:NERDTreeMapPrevHunk = '<S-Char-9>'
+let g:NERDTreeMapNextHunk = '<Char-9>'
+" config for Xuyuanp/nerdtree-git-plugin fork
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "⋆",
+    \ "Staged"    : "•",
+    \ "Untracked" : "∘",
+    \ "Renamed"   : "®",
+    \ 'Ignored'   : '☒',
+    \ "Dirty"     : "⁖",
+    \ "Clean"     : "✔︎",
+    \ "Unmerged"  : "≄",
+    \ "Deleted"   : "♻",
+    \ "Unknown"   : "✗"
+    \ }
+
+" let g:NERDTreeColorMapCustom = {
+"     \ "Modified"  : "⋆",
+"     \ "Staged"    : "•",
+"     \ "Untracked" : "∘",
+"     \ "Renamed"   : "®",
+"     \ "Ignored"   : "☒'",
+"     \ "Dirty"     : "⁖",
+"     \ "Clean"     : "✔︎",
+"     \ "Unmerged"  : "≄",
+"     \ "Deleted"   : "♻",
+"     \ "Unknown"   : "✗"
+"     \ }
+
+autocmd ColorScheme * hi NERDTreeGitModified guifg=#558CB8
+autocmd ColorScheme * hi NERDTreeGitStaged guifg=#99456C
+autocmd ColorScheme * hi NERDTreeGitRenamed guifg=#624445
+autocmd ColorScheme * hi NERDTreeGitUnmerged guifg=#374752
+autocmd ColorScheme * hi NERDTreeGitUntracked guifg=#399752
+" autocmd ColorScheme * hi NERDTreeGitAdded guifg=#B75F64
+autocmd ColorScheme * hi NERDTreeGitIgnored guifg=#811185
+autocmd ColorScheme * hi NERDTreeGitDeleted guifg=#888885
+autocmd ColorScheme * hi NERDTreeGitUnknown guifg=#551999
+autocmd ColorScheme * hi NERDTreeGitDirDirty guifg=#299999
+autocmd ColorScheme * hi NERDTreeGitDirClean guifg=#E11999
+
+
+hi def link NERDTreeGitStatusModified NERDTreeGitModified
+hi def link NERDTreeGitStatusStaged NERDTreeGitStaged
+hi def link NERDTreeGitStatusRenamed  NERDTreeGitRenamed
+hi def link NERDTreeGitStatusUnmerged NERDTreeGitUnmerged
+hi def link NERDTreeGitStatusUntracked NERDTreeGitUntracked
+" hi def link NERDTreeGitStatusAdded NERDTreeGitAdded
+hi def link NERDTreeGitStatusIgnored NERDTreeGitIgnored
+hi def link NERDTreeGitStatusDeleted NERDTreeGitDeleted
+hi def link NERDTreeGitStatusUnknown NERDTreeGitUnknown
+hi def link NERDTreeGitStatusDirDirty NERDTreeGitDirDirty
+hi def link NERDTreeGitStatusDirClean NERDTreeGitDirClean
+
+
+" call <SID>X("NERDTreeGitModified", s:yellow, "", "")
+" call <SID>X("NERDTreeGitAdded", s:green, "", "")
+" call <SID>X("NERDTreeGitRenamed", s:green, "", "")
+" call <SID>X("NERDTreeGitUnmerged", s:blue, "", "")
+" call <SID>X("NERDTreeGitDeleted", s:blue, "", "")
+" call <SID>X("NERDTreeGitDirDirty", s:yellow, "", "")
+" call <SID>X("NERDTreeGitDirClean", s:green, "", "")
+" call <SID>X("NERDTreeGitUnknown", s:red, "", "")
+
+" let g:NERDTreeExactMatchHighlightColor = {
+"     \ nr2char(8201) :  "E11999"
+" }
+
+let g:NERDTreeGitStatusNodeColorization = 1
+let g:NERDTreeGitStatusWithFlags = 0
+" let g:NERDTreeGitStatusIndicatorMap = {
+" let g:NERDTreeIndicatorMapCustom = {
+"                 \ 'Modified'  : nr2char(8201),
+"                 \ 'Added'     : nr2char(8239),
+"                 \ 'Renamed'   : nr2char(8199),
+"                 \ 'Unmerged'  : nr2char(8200),
+"                 \ 'Deleted'   : nr2char(8287),
+"                 \ 'Unknown'   : nr2char(8195),
+"                 \ 'Dirty'     : nr2char(8202),
+"                 \ 'Clean'     : nr2char(8196)
+"                 \ }
+
+" let g:NERDTreeGitStatusIndicatorMap = {
+"                 \ 'Modified'  : '⋆',
+"                 \ 'Added'     : '•',
+"                 \ 'Renamed'   : '®',
+"                 \ 'Unmerged'  : '≄',
+"                 \ 'Unknown'   : '✗',
+"                 \ 'Deleted'   : '♻',
+"                 \ 'Dirty'     : '⁖',
+"                 \ 'Clean'     : '✔︎'
+"                 \ }
+
+
+"----------NERDTree Git------------
 
 "----Stock File Tree--------
 " NERDTree like setup
@@ -262,8 +377,6 @@ let g:test#transformation = 'go'
 " preserv logs from previous test runs
 let g:test#preserve_screen = 1
 "-------VIM-TEST----------
-
-"--------------TEXT EDITING----------------
 
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
@@ -339,6 +452,9 @@ let g:go_metalinter_autosave = 1
 " let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_metalinter_autosave_enabled = ['errcheck']
 let g:go_metalinter_deadline = "5s"
+
+let g:go_gocode_unimported_packages = 1
+let g:go_gocode_propose_builtins = 1                                                                                                           
 "---------GOLANG---------------
 
 "------------NERD-TREE--------------
@@ -360,14 +476,25 @@ endfunction
 autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1) | call s:syncTree() | endif
 "------------NERD-TREE--------------
 
-" Autocompletion
-let g:acp_enableAtStartup = 0
-
-"----------NEO-COMPLETE-------------
-set nocompatible              " be iMproved, required
-"real-time code completion with neocomplete
-set omnifunc='flowcomplete#Complete'
-let g:neocomplete#enable_at_startup = 1
+"------------DEOPLETE----------------
+set nocompatible
+" disable the preview window
+set completeopt-=preview
+let g:python3_host_prog = substitute(system('which python3.6'), '^\s*\(.\{-}\)\s*\n\+$', '\1', '')
+" Skip the check of neovim module
+" let g:python3_host_skip_check = 1
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+" fix neopairs closing the parenthesis
+let g:neopairs#enable = 1
+call deoplete#custom#source('_', 'converters', ['converter_auto_paren'])
+"" Move up and down in autocomplete with <c-j> and <c-k>
+" autocmd VimEnter * inoremap <expr> <c-h> ("\<Left>")
+inoremap <expr> <c-k> ("\<Up>")
+inoremap <expr> <c-j> ("\<Down>")
+" inoremap <expr> <c-h> ("\<Left>") "overriden by vim backspace
+inoremap <expr> <c-l> ("\<Right>")
+"------------DEOPLETE----------------
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -375,16 +502,6 @@ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-" disable the preview window
-set completeopt-=preview
-" Move up and down in autocomplete with <c-j> and <c-k>
-" autocmd VimEnter * inoremap <expr> <c-h> ("\<Left>")
-inoremap <expr> <c-j> ("\<Down>")
-inoremap <expr> <c-k> ("\<Up>")
-" inoremap <expr> <c-h> ("\<Left>") "overriden by vim backspace
-inoremap <expr> <c-l> ("\<Right>")
-"----------NEO-COMPLETE-------------
-
 
 "-----------ULTISNIPS--------------
 let g:UltiSnipsExpandTrigger="<Tab>"
@@ -393,15 +510,15 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 let g:UltiSnipsEditSplit="horizontal"
 "-----------ULTISNIPS--------------
 
-"--------TAB-NEOCOMPLETE+ULTISNIPS----------
-" smart TAB - opens neocomplete from index position or autocompletes a snippet
+"--------TAB-DEOPLETE+ULTISNIPS----------
+" smart TAB - opens deoplete or autocompletes a snippet
 function! s:check_back_space() "{{{
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
 endfunction"}}}
 
 function! g:NeoC()
-    return pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" :neocomplete#start_manual_complete()
+    return pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" :deoplete#mappings#manual_complete()
 endfunction
 
 function! g:UltiSnips_Complete()
@@ -516,6 +633,19 @@ let g:tagbar_type_go = {
 "autocmd BufWritePost ?* !ctags %"
 "---------TAG-BAR----------
 
+"------GITGUTTER-------
+highlight clear SignColumn
+autocmd ColorScheme * hi GitGutterChange guibg=#2E3440 guifg=#374752
+autocmd ColorScheme * hi GitGutterAdd guibg=#2E3440 guifg=#384C38
+autocmd ColorScheme * hi GitGutterDelete guibg=#2E3440 guifg=#656E76
+autocmd ColorScheme * hi GitGutterChangeDelete guibg=#2E3440 guifg=#656E76
+let g:gitgutter_sign_added = '█'
+let g:gitgutter_sign_modified = '█'
+"⬊  ▸ ↘  ⇲  ⤥  ➘  ➴  ➷ 
+let g:gitgutter_sign_removed = '↘'
+let g:gitgutter_sign_modified_removed = '↘'
+"------GITGUTTER-------
+
 
 "---------THEME--------
 " Insert this into .tmux.conf
@@ -526,10 +656,28 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set t_ut=
 set background=dark
-colorscheme nord
-let g:airline_theme = 'nord'
-let g:material_terminal_italics = 1
-let g:material_theme_style = 'default'
+
+" colorscheme based on file type inside the current working directory
+" we could change the depth if we want to triger the theme at other level 
+if system('find `pwd` -maxdepth 1 -regex ".*\.go" | wc -l') !=# 0
+    " set autowrite
+    "GIT-GUTTER
+    autocmd ColorScheme * hi GitGutterChange guibg=#323232 guifg=#374752
+    autocmd ColorScheme * hi GitGutterAdd guibg=#323232 guifg=#384C38
+    autocmd ColorScheme * hi GitGutterDelete guibg=#323232 guifg=#656E76
+    autocmd ColorScheme * hi GitGutterChangeDelete guibg=#323232 guifg=#656E76
+    colorscheme darcula "theme should be set after the git-gutter colors
+    " let g:airline_theme = 'biogoo'
+    let g:airline_theme = 'zenburn' 
+else
+    colorscheme nord
+    let g:airline_theme = 'nord'
+endif
+
+" activate underlining of typos
+set spell
+hi clear SpellBad
+hi SpellBad cterm=underline
 "---------THEME---------
 
 "---------ALE LINTER------------
@@ -537,13 +685,18 @@ let g:material_theme_style = 'default'
 let g:ale_enabled = 1
 let g:ale_sign_error = "◉"
 let g:ale_sign_warning = "◉"
-highlight ALEErrorSign ctermfg=9 ctermbg=15 guifg=#C30500
-highlight ALEWarningSign ctermfg=11 ctermbg=15 guifg=#f0ad4e
-" all lines which have error signs will turn red
-hi Error cterm=bold gui=bold
-hi Warning cterm=bold gui=bold guibg=#f0ad4e
+
+" activate line customizations for error and waringns
+highlight ALEErrorSign ctermfg=9 ctermbg=15 guifg=#9B3833 guibg=#323232
+highlight ALEWarningSign ctermfg=11 ctermbg=15 guifg=#f0ad4e guibg=#323232
+" all warnings will be bold, could and ,underline to underline them too
+hi Warning cterm=bold
+" all lines which have error will turn red
+hi ALEErrorLine cterm=bold gui=bold guibg=#9B3833
 highlight link ALEErrorLine Error
-" highlight link ALEWarningLine Warning
+highlight link ALEWarningLine Warning
+
+
 " highlight link ALEInfoLine error
 " let g:ale_sign_error = '!'
 " let g:ale_sign_warning = '?'

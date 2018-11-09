@@ -148,4 +148,4 @@ export GOROOT=$HOME/development/go
 export PROTOC=$HOME/development/protoc/bin
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$PROTOC
 
-
+export GO111MODULE=on

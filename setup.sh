@@ -2,7 +2,8 @@
 # install vim
 sudo apt-get -y remove vim vim-runtime gvim
 # install deps for manually building vim
-sudo apt-get -y install liblua5.1-dev luajit libluajit-5.1 python-dev ruby-dev libperl-dev libncurses5-dev libatk1.0-dev libx11-dev libxpm-dev libxt-dev python2.7 python-pip
+sudo apt-get -y install liblua5.1-dev luajit libluajit-5.1 python-dev ruby-dev
+libperl-dev libncurses5-dev libatk1.0-dev libx11-dev libxpm-dev libxt-dev python2.7 python3.6 python-pip python3-pip
 sudo mkdir /usr/include/lua5.1/include
 sudo cp /usr/include/lua5.1/* /usr/include/lua5.1/include
 git clone https://github.com/vim/vim.git
@@ -10,20 +11,28 @@ cd vim
 sudo make uninstall # remove previous custom builds if any
 make distclean
 ./configure --with-features=huge \
-            --enable-rubyinterp \
-            --enable-largefile \
-            --disable-netbeans \
-            --enable-pythoninterp \
-            --with-python-config-dir=/usr/lib/python2.7/config \
-            --enable-perlinterp \
-            --enable-luainterp \
+            --enable-multibyte \
+	    	--enable-rubyinterp=yes \
+	    	--enable-pythoninterp=yes \
+	    	--with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \ # pay attention here check directory correct
+	    	--enable-python3interp=yes \
+	    	--with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu \ # pay attention here check directory correct
+	    	--enable-perlinterp=yes \
+	    	--enable-luainterp=yes \
             --with-luajit \
-            --enable-fail-if-missing \
             --with-lua-prefix=/usr/include/lua5.1 \
-            --enable-cscope
+            --enable-gui=gtk2 \
+            --enable-largefile \
+            --enable-fail-if-missing \
+            --enable-cscope \
+            --prefix=/usr/local
+make VIMRUNTIMEDIR=/usr/local/share/vim/vim81
 sudo make install
 cd ..
 sudo rm -rf vim
+#install neovim-bridge for the autocomplete
+pip3 install neovim
+go get -u github.com/mdempsky/gocode
 # install and change to zsh
 sudo apt-get -y install zsh
 chsh -s $(which zsh)
