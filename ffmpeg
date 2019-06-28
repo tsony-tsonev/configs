@@ -1,0 +1,28 @@
+# partial record for smaller size with following mouse centered and with audio
+ffmpeg -video_size 640x480 -follow_mouse centered -show_region 1 -framerate 25 -f x11grab -i :0.0+0,0 -f pulse -ac 2 -i default output.mkv
+
+# full record (very big file size)
+ffmpeg -video_size 1920x1080 -framerate 25 -f x11grab -i :0.0+0,0 -f pulse -ac 2 -i default output.mkv
+
+# 640x480 starting from top lef 100x200
+ffmpeg -video_size 640x480 -show_region 1 -framerate 25 -f x11grab -i :0.0+100,200 -f pulse -ac 2 -i default output.mkv
+
+
+
+# see display interface
+echo $DISPLAY
+# value of the display is passed to the -i parmeter example if value is ":0" we set parameters "-f x11grab -i :0.0+0,0"
+# if value of display is ":1" we set parameters "-f x11grab -i :1.0+0,0"
+
+# see the audio interfaces
+pacmd list-sources|awk '/index:/ {print $0}; /name:/ {print $0}; /device\.description/ {print $0}'
+# the values for NAME between "<" and ">" are the real interfaces which are passed to "-f pulse -i INTERFACE_NAME"
+
+# both audio from mic and from sound card
+ffmpeg -video_size 640x480 -follow_mouse centered -show_region 1 -framerate 25 -f x11grab -i :0.0+0,0 -f pulse -i alsa_output.pci-0000_00_1f.3.analog-stereo.monitor -f pulse -i alsa_input.pci-0000_00_1f.3.analog-stereo -filter_complex amerge output.mkv
+#to have two separate audio channels remove the amerge filter and add "-map 0:0 -map 1:0 -map 2:0" where the first is for video the other two are the two audio channels (one for the mic one for the soundcard)
+
+# !!! Note the audio driver should be "alsa" or "pulse" try with both of them and see which one works
+# !!! for video quality add this to the above commands
+-c:v libx264 -crf 40
+# the higher the value is the compression is bigger and the file size is smaller, but the quality also drops

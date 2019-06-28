@@ -143,7 +143,7 @@ alias cat="colorize_via_pygmentize"
 
 
 #Go
-export GOPATH=$HOME/workspace/go/
+export GOPATH=$HOME/workspace/go
 export GOROOT=$HOME/development/go
 export PROTOC=$HOME/development/protoc/bin
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$PROTOC

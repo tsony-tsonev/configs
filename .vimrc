@@ -25,6 +25,8 @@ filetype plugin indent on
 syntax on               "enable languages syntax
 syntax enable
 
+" make autocomplete not auto insert the first match
+set completeopt=longest,menuone
 " fix backspace key
 set backspace=indent,eol,start
 set ttimeoutlen=50      "faster switch to normal mode
@@ -112,28 +114,31 @@ endif
 
 " persist folds between vim sessions
 augroup AutoSaveFolds
-  autocmd!
-  " view files are about 500 bytes
-  " bufleave but not bufwinleave captures closing 2nd tab
-  " nested is needed by bufwrite* (if triggered via other autocmd)
-  autocmd BufWinLeave,BufLeave,BufWritePost ?* nested silent! mkview!
-  autocmd BufWinEnter ?* silent! loadview
+    autocmd!
+    " view files are about 500 bytes
+    " bufleave but not bufwinleave captures closing 2nd tab
+    " nested is needed by bufwrite* (if triggered via other autocmd)
+    autocmd BufWinLeave,BufLeave,BufWritePost ?* nested silent! mkview!
+    autocmd BufWinEnter ?* silent! loadview
 augroup end
 set viewoptions=folds,cursor
 set sessionoptions=folds
 
 " keep cursor position per buffer between sessions
 function! ResCur()
-  if line("'\"") <= line("$")
-    normal! g`"
-    return 1
-  endif
+    if line("'\"") <= line("$")
+        normal! g`"
+        return 1
+    endif
 endfunction
 
 augroup resCur
-  autocmd!
-  autocmd BufWinEnter * call ResCur()
+    autocmd!
+    autocmd BufWinEnter * call ResCur()
 augroup END
+
+" fix whole file mixed identation
+map <F7> gg=G<C-o><C-o>
 "----------GENERAL--------------
 
 
@@ -232,6 +237,13 @@ inoremap ;/ <Esc>/
 inoremap ;ac <Esc>:Ack!
 " togge nerd tree
 inoremap !! <Esc>:NERDTreeToggle<CR><C-W>la
+
+"Move up and down in autocomplete with <c-j> and <c-k>
+" autocmd VimEnter * inoremap <expr> <c-h> ("\<Left>")
+inoremap <expr> <c-k> ("\<Up>")
+inoremap <expr> <c-j> ("\<Down>")
+" inoremap <expr> <c-h> ("\<Left>") "overriden by vim backspace
+inoremap <expr> <c-l> ("\<Right>")
 "------INSERT MODE
 "--------------TEXT EDITING----------------
 
@@ -252,100 +264,22 @@ let g:NERDTreeDisableExactMatchHighlight = 1
 let g:NERDTreeDisablePatternMatchHighlight = 1
 let g:NERDTreeSyntaxEnabledExtensions = ['go', 'js', 'css', 'py', 'sh']
 
-
-let g:NERDTreeMapPrevHunk = '<S-Char-9>'
-let g:NERDTreeMapNextHunk = '<Char-9>'
-" config for Xuyuanp/nerdtree-git-plugin fork
 let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "⋆",
-    \ "Staged"    : "•",
-    \ "Untracked" : "∘",
-    \ "Renamed"   : "®",
-    \ 'Ignored'   : '☒',
-    \ "Dirty"     : "⁖",
-    \ "Clean"     : "✔︎",
-    \ "Unmerged"  : "≄",
-    \ "Deleted"   : "♻",
-    \ "Unknown"   : "✗"
-    \ }
-
-" let g:NERDTreeColorMapCustom = {
-"     \ "Modified"  : "⋆",
-"     \ "Staged"    : "•",
-"     \ "Untracked" : "∘",
-"     \ "Renamed"   : "®",
-"     \ "Ignored"   : "☒'",
-"     \ "Dirty"     : "⁖",
-"     \ "Clean"     : "✔︎",
-"     \ "Unmerged"  : "≄",
-"     \ "Deleted"   : "♻",
-"     \ "Unknown"   : "✗"
-"     \ }
-
-autocmd ColorScheme * hi NERDTreeGitModified guifg=#558CB8
-autocmd ColorScheme * hi NERDTreeGitStaged guifg=#99456C
-autocmd ColorScheme * hi NERDTreeGitRenamed guifg=#624445
-autocmd ColorScheme * hi NERDTreeGitUnmerged guifg=#374752
-autocmd ColorScheme * hi NERDTreeGitUntracked guifg=#399752
-" autocmd ColorScheme * hi NERDTreeGitAdded guifg=#B75F64
-autocmd ColorScheme * hi NERDTreeGitIgnored guifg=#811185
-autocmd ColorScheme * hi NERDTreeGitDeleted guifg=#888885
-autocmd ColorScheme * hi NERDTreeGitUnknown guifg=#551999
-autocmd ColorScheme * hi NERDTreeGitDirDirty guifg=#299999
-autocmd ColorScheme * hi NERDTreeGitDirClean guifg=#E11999
-
-
-hi def link NERDTreeGitStatusModified NERDTreeGitModified
-hi def link NERDTreeGitStatusStaged NERDTreeGitStaged
-hi def link NERDTreeGitStatusRenamed  NERDTreeGitRenamed
-hi def link NERDTreeGitStatusUnmerged NERDTreeGitUnmerged
-hi def link NERDTreeGitStatusUntracked NERDTreeGitUntracked
-" hi def link NERDTreeGitStatusAdded NERDTreeGitAdded
-hi def link NERDTreeGitStatusIgnored NERDTreeGitIgnored
-hi def link NERDTreeGitStatusDeleted NERDTreeGitDeleted
-hi def link NERDTreeGitStatusUnknown NERDTreeGitUnknown
-hi def link NERDTreeGitStatusDirDirty NERDTreeGitDirDirty
-hi def link NERDTreeGitStatusDirClean NERDTreeGitDirClean
-
-
-" call <SID>X("NERDTreeGitModified", s:yellow, "", "")
-" call <SID>X("NERDTreeGitAdded", s:green, "", "")
-" call <SID>X("NERDTreeGitRenamed", s:green, "", "")
-" call <SID>X("NERDTreeGitUnmerged", s:blue, "", "")
-" call <SID>X("NERDTreeGitDeleted", s:blue, "", "")
-" call <SID>X("NERDTreeGitDirDirty", s:yellow, "", "")
-" call <SID>X("NERDTreeGitDirClean", s:green, "", "")
-" call <SID>X("NERDTreeGitUnknown", s:red, "", "")
-
-" let g:NERDTreeExactMatchHighlightColor = {
-"     \ nr2char(8201) :  "E11999"
-" }
+            \ "Modified"  : "⋆",
+            \ "Staged"    : "•",
+            \ "Untracked" : "∘",
+            \ "Renamed"   : "®",
+            \ 'Ignored'   : '☒',
+            \ "Dirty"     : "⁖",
+            \ "Clean"     : "✔︎",
+            \ "Unmerged"  : "≄",
+            \ "Deleted"   : "♻",
+            \ "Unknown"   : "✗"
+            \ }
 
 let g:NERDTreeGitStatusNodeColorization = 1
-let g:NERDTreeGitStatusWithFlags = 0
-" let g:NERDTreeGitStatusIndicatorMap = {
-" let g:NERDTreeIndicatorMapCustom = {
-"                 \ 'Modified'  : nr2char(8201),
-"                 \ 'Added'     : nr2char(8239),
-"                 \ 'Renamed'   : nr2char(8199),
-"                 \ 'Unmerged'  : nr2char(8200),
-"                 \ 'Deleted'   : nr2char(8287),
-"                 \ 'Unknown'   : nr2char(8195),
-"                 \ 'Dirty'     : nr2char(8202),
-"                 \ 'Clean'     : nr2char(8196)
-"                 \ }
-
-" let g:NERDTreeGitStatusIndicatorMap = {
-"                 \ 'Modified'  : '⋆',
-"                 \ 'Added'     : '•',
-"                 \ 'Renamed'   : '®',
-"                 \ 'Unmerged'  : '≄',
-"                 \ 'Unknown'   : '✗',
-"                 \ 'Deleted'   : '♻',
-"                 \ 'Dirty'     : '⁖',
-"                 \ 'Clean'     : '✔︎'
-"                 \ }
-
+let g:NERDTreeGitStatusWithFlags = 1
+" let g:NERDTreeShowIgnoredStatus = 1
 
 "----------NERDTree Git------------
 
@@ -419,7 +353,7 @@ let g:go_highlight_extra_types = 1
 let g:go_auto_sameids = 1
 let g:go_highlight_build_constraints = 1
 
-let g:go_def_mode = 'guru' " guru or godef
+let g:go_def_mode = 'gopls' " guru or godef or gopls
 let g:go_def_mapping_enabled=0
 " Override vim-go's hidden override of C-t :)
 nnoremap <buffer> <silent> <C-t> :TagbarToggle<cr>
@@ -454,7 +388,24 @@ let g:go_metalinter_autosave_enabled = ['errcheck']
 let g:go_metalinter_deadline = "5s"
 
 let g:go_gocode_unimported_packages = 1
-let g:go_gocode_propose_builtins = 1                                                                                                           
+let g:go_gocode_propose_builtins = 1                                                                                                         
+"shourtucts
+
+"experiment for importing libraries when the vim-go plugin autocomplete from
+"not imported dependencies was not working
+inoremap ;gi <Esc>:call GoImp()<CR>a
+
+fun! GoImp()
+    let word_under_cursor = expand("<cWORD>")
+    " list packages in $GOPATH and $GOROOT
+    "(export GO111MODULE=off && bash -c "go list ./`echo $GOPATH | cut -d '/' -f $(($(echo $HOME | tr -cd '/'| wc -c) +2))-`/src...")
+    "(export GO111MODULE=off && bash -c "go list ./`echo $GOROOT | cut -d '/' -f $(($(echo $HOME | tr -cd '/'| wc -c) +2))-`/src...")
+    "TODO filter the word from the available imports for example http and
+    "shourtuct should try to import package net/http
+    call setline(".", substitute(getline("."), word_under_cursor, split(word_under_cursor, "/")[-1], ""))
+    execute "GoImport ".word_under_cursor
+endfun
+
 "---------GOLANG---------------
 
 "------------NERD-TREE--------------
@@ -466,11 +417,11 @@ noremap <C-l> :NERDTreeToggle<CR>
 let g:NERDTreeMouseMode=2
 
 function! s:syncTree()
-  if (winnr("$") > 1)
-    let s:curwnum = winnr()
-    NERDTreeFind
-    exec s:curwnum . "wincmd w"
-  endif
+    if (winnr("$") > 1)
+        let s:curwnum = winnr()
+        NERDTreeFind
+        exec s:curwnum . "wincmd w"
+    endif
 endfunction
 " sync nerd tree to highlight the opened buffer only if tree is opened
 autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1) | call s:syncTree() | endif
@@ -479,21 +430,24 @@ autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName
 "------------DEOPLETE----------------
 set nocompatible
 " disable the preview window
-set completeopt-=preview
-let g:python3_host_prog = substitute(system('which python3.6'), '^\s*\(.\{-}\)\s*\n\+$', '\1', '')
-" Skip the check of neovim module
-" let g:python3_host_skip_check = 1
+" set completeopt-=preview
+let g:python3_host_skip_check = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
+let g:python3_host_prog = substitute(system('which python3.6'), '^\s*\(.\{-}\)\s*\n\+$', '\1', '')
+" let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+
+" let g:deoplete#sources#go#source_importer = 1
+let g:deoplete#sources#go#unimported_packages = 1
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'var', 'const', 'type']
+let g:deoplete#sources#go#builtin_objects = 1
+
+" let g:deoplete#sources#go = ['vim-go']
+" let g:deoplete#sources#go#gocode_binary = '/dev/null'
+
 " fix neopairs closing the parenthesis
 let g:neopairs#enable = 1
 call deoplete#custom#source('_', 'converters', ['converter_auto_paren'])
-"" Move up and down in autocomplete with <c-j> and <c-k>
-" autocmd VimEnter * inoremap <expr> <c-h> ("\<Left>")
-inoremap <expr> <c-k> ("\<Up>")
-inoremap <expr> <c-j> ("\<Down>")
-" inoremap <expr> <c-h> ("\<Left>") "overriden by vim backspace
-inoremap <expr> <c-l> ("\<Right>")
 "------------DEOPLETE----------------
 
 " Enable omni completion.
@@ -538,7 +492,7 @@ function! g:UltiSnips_Complete()
 endfunction
 
 au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-"--------TAB-NEOCOMPLETE+ULTISNIPS----------
+"--------TAB-DEOMPLETE+ULTISNIPS----------
 
 "----------CTRLP-------------- Search for files
 set rtp+=~/.vim/bundle/ctrlp.vim
@@ -575,19 +529,18 @@ set foldcolumn=0
 
 " Minimal style for folded code
 function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
-
     let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
+    let windowwidth = winwidth(0) - nucolwidth 
     let foldedlinecount = v:foldend - v:foldstart
 
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
+    let line = getline(v:foldstart)
+    let lastLine = getline(v:foldend)
+    let lastLineLastChar = lastLine[len(lastLine)-1]
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - len("⊞ ...") - len("⇲")
 
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+    " ☟ ⚶  ⊎ ≻ ≺ ⇲ ↯ ⚞ ⚟
+    return "⊞ " . line . '...' . lastLineLastChar . repeat(" ", fillcharcount) . foldedlinecount . '⇲ '
+
 endfunction " }}}
 set foldtext=MyFoldText()
 "---------FOLD----------
@@ -634,7 +587,7 @@ let g:tagbar_type_go = {
 "---------TAG-BAR----------
 
 "------GITGUTTER-------
-highlight clear SignColumn
+" highlight clear SignColumn
 autocmd ColorScheme * hi GitGutterChange guibg=#2E3440 guifg=#374752
 autocmd ColorScheme * hi GitGutterAdd guibg=#2E3440 guifg=#384C38
 autocmd ColorScheme * hi GitGutterDelete guibg=#2E3440 guifg=#656E76
@@ -1030,4 +983,6 @@ imap <F3> <C-O>:call Info()<CR>
 "
 "------------SNIPPETS----------
 
-
+"fix folded code highlight - this line must at the end of script, 
+"because it is overridden by some of the rest of the plugins
+hi! link Folded SignColumn
