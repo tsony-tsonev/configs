@@ -251,7 +251,7 @@ inoremap <expr> <c-l> ("\<Right>")
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1  "enables nodes icons
 let g:DevIconsEnableFoldersOpenClose = 1 "enables different icon for expandable/not expandable icons
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ' '
 let g:NERDTreeDirArrowExpandable = nr2char(8200)  "sets expandable character to none - hides it
 let g:NERDTreeDirArrowCollapsible = nr2char(8200)  "sets collapsible character to none - hides it
 
@@ -343,17 +343,34 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 au FileType go nmap gd <Plug>(go-def)
 
 " Highlight
-let g:go_auto_type_info=0
+let g:go_auto_sameids = 1
+let g:go_auto_type_info= 1
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
-let g:go_auto_sameids = 1
 let g:go_highlight_build_constraints = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_array_whitespace_error = 1
+let g:go_highlight_chan_whitespace_error = 1
+let g:go_highlight_space_tab_error = 1
+let g:go_highlight_trailing_whitespace_error = 0
+let g:go_highlight_function_calls = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_string_spellcheck = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 0
+let g:go_highlight_variable_assignments = 0
+
+" fix auto fold on GoFmt
+let g:go_fmt_experimental = 1
+
+let g:go_doc_popup_window = 1
 
 let g:go_def_mode = 'gopls' " guru or godef or gopls
+let g:go_info_mode = 'gopls' " guru or godef or gopls
 let g:go_def_mapping_enabled=0
 " Override vim-go's hidden override of C-t :)
 nnoremap <buffer> <silent> <C-t> :TagbarToggle<cr>
@@ -381,6 +398,7 @@ function! s:build_go_files()
 endfunction
 
 " error checks on save
+let g:go_metalinter_command='golangci-lint'
 let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
 let g:go_metalinter_autosave = 1
 " let g:go_metalinter_autosave_enabled = ['vet', 'golint']
@@ -430,7 +448,7 @@ autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName
 "------------DEOPLETE----------------
 set nocompatible
 " disable the preview window
-" set completeopt-=preview
+"set completeopt+=preview
 let g:python3_host_skip_check = 1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
@@ -472,7 +490,7 @@ function! s:check_back_space() "{{{
 endfunction"}}}
 
 function! g:NeoC()
-    return pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" :deoplete#mappings#manual_complete()
+    return pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" :deoplete#manual_complete()
 endfunction
 
 function! g:UltiSnips_Complete()
@@ -639,6 +657,10 @@ let g:ale_enabled = 1
 let g:ale_sign_error = "◉"
 let g:ale_sign_warning = "◉"
 
+let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_enter = 1
+
 " activate line customizations for error and waringns
 highlight ALEErrorSign ctermfg=9 ctermbg=15 guifg=#9B3833 guibg=#323232
 highlight ALEWarningSign ctermfg=11 ctermbg=15 guifg=#f0ad4e guibg=#323232
@@ -695,6 +717,54 @@ cnoreabbrev Ack Ack!
 nnoremap <Leader>ac :Ack!<Space>
 "------------ACK-----------------
 
+"-----------Balloon-PopUp-------------
+set ttymouse=sgr
+set balloondelay=250
+set ballooneval
+set balloonevalterm
+
+" Returns either the contents of a fold or godef.
+function! BalloonExpr()
+  let foldStart = foldclosed(v:beval_lnum)
+
+  " check if we are in a fold
+  if foldStart >= 0
+    let foldEnd = foldclosedend(v:beval_lnum)
+    let numLines = foldEnd - foldStart + 1
+    let lines = []
+    " Up to 31 lines get shown okay; beyond that, only 30 lines are shown with
+    " ellipsis in between to indicate too much. The reason why 31 get shown ok
+    " is that 30 lines plus one of ellipsis is 31 anyway.
+    if ( numLines > 31 )
+      let lines = getline( foldStart, foldStart + 14 )
+      let lines += [ '-- Snipped ' . ( numLines - 30 ) . ' lines --' ]
+      let lines += getline( foldEnd - 14, foldEnd )
+    else
+      let lines = getline( foldStart, foldEnd )
+    endif
+    
+    "return join( lines, has( "balloon_multiline" ) ? "\n" : " " )
+    call popup_beval(lines, #{mousemoved:'word'})
+    return ""
+  endif
+
+  " check if there is a lint error on the line
+  let l:loclist = get(g:ale_buffer_info, v:beval_bufnr, {'loclist': []}).loclist
+  let l:index = ale#util#BinarySearch(l:loclist, v:beval_bufnr, v:beval_lnum, v:beval_col)
+  " get the lint message if found
+  if l:index >= 0
+    "not works unless ale_set_balloons is set, but if set overrides balloonexpr
+    "return ale#balloon#Expr() 
+    return l:loclist[l:index].text
+  endif
+  
+  " use golang as default
+  return go#tool#DescribeBalloon() 
+endfunction
+set balloonexpr=BalloonExpr()
+"-----------Balloon-PopUp-------------
+
+
 "------------SNIPPETS----------
 " type fast ;ff to insert the snippet
 imap ;fpf fmt.Printf("")<left><left>
@@ -728,189 +798,8 @@ imap ;th req := httptest.NewRequest("GET", "http://example.com", bytes.NewReader
             \if err != nil {<CR>t.Error("Error reading response body", err)}<CR><Up><Up><Up><Up><Up><Up><Up>
 imap ;nh func (w http.ResponseWriter, r *http.Request) {<CR>}<Up><Up><Right><Right><Right><Right>
 
-"---extract golang variable
-function! s:guru_cmd(args) range abort
-    let mode = a:args.mode
-    let format = a:args.format
-    let needs_scope = a:args.needs_scope
-    let selected = a:args.selected
-
-    let result = {}
-    let pkg = go#package#ImportPath()
-
-    " this is important, check it!
-    if pkg == -1 && needs_scope
-        return {'err': "current directory is not inside of a valid GOPATH"}
-    endif
-
-    "return with a warning if the binary doesn't exist
-    let bin_path = go#path#CheckBinPath("guru")
-    if empty(bin_path)
-        return {'err': "bin path not found"}
-    endif
-
-    " start constructing the command
-    let cmd = [bin_path, '-tags', go#config#BuildTags()]
-
-    if &modified
-        let result.stdin_content = go#util#archive()
-        call add(cmd, "-modified")
-    endif
-
-    " enable outputting in json format
-    if format == "json"
-        call add(cmd, "-json")
-    endif
-
-    let scopes = go#config#GuruScope()
-    if empty(scopes)
-        " some modes require scope to be defined (such as callers). For these we
-        " choose a sensible setting, which is using the current file's package
-        if needs_scope
-            let scopes = [pkg]
-        endif
-    endif
-
-    " Add the scope.
-    if !empty(scopes)
-        " guru expect a comma-separated list of patterns.
-        let l:scope = join(scopes, ",")
-        let result.scope = l:scope
-        call extend(cmd, ["-scope", l:scope])
-    endif
-
-    let pos = printf("#%s", go#util#OffsetCursor())
-    if selected != -1
-        " means we have a range, get it
-        let pos1 = go#util#Offset(line("'<"), col("'<"))
-        let pos2 = go#util#Offset(line("'>"), col("'>"))
-        let pos = printf("#%s,#%s", pos1, pos2)
-    endif
-
-    let l:filename = fnamemodify(expand("%"), ':p:gs?\\?/?') . ':' . pos
-    call extend(cmd, [mode, l:filename])
-
-    let result.cmd = cmd
-    return result
-endfunction
-
-function! s:sync_guru(args) abort
-    let result = s:guru_cmd(a:args)
-    if has_key(result, 'err')
-        call go#util#EchoError(result.err)
-        return -1
-    endif
-
-    if !has_key(a:args, 'disable_progress')
-        if a:args.needs_scope
-            call go#util#EchoProgress("analysing with scope ". result.scope .
-                        \ " (see ':help go-guru-scope' if this doesn't work)...")
-        elseif a:args.mode !=# 'what'
-            " the query might take time, let us give some feedback
-            call go#util#EchoProgress("analysing ...")
-        endif
-    endif
-
-    " run, forrest run!!!
-    if has_key(l:result, 'stdin_content')
-        let [l:out, l:err] = go#util#Exec(l:result.cmd, l:result.stdin_content)
-    else
-        let [l:out, l:err] = go#util#Exec(l:result.cmd)
-    endif
-
-    if has_key(a:args, 'custom_parse')
-        call a:args.custom_parse(l:err, l:out, a:args.mode)
-    endif
-
-    return l:out
-endfunc
-
 function! Info()
-    function! s:info(exit_val, output, mode)
-        if a:exit_val != 0
-            return
-        endif
-
-        if a:output[0] !=# '{'
-            return
-        endif
-
-        if empty(a:output) || type(a:output) != type("")
-            return
-        endif
-
-        let result = json_decode(a:output)
-        if type(result) != type({})
-            call go#util#EchoError(printf("malformed output from guru: %s", a:output))
-            return
-        endif
-
-        if !has_key(result, 'detail')
-            " if there is no detail check if there is a description and print it
-            if has_key(result, "desc")
-                call go#util#EchoInfo(result["desc"])
-                return
-            endif
-
-            call go#util#EchoError("detail key is missing. Please open a bug report on vim-go repo.")
-            return
-        endif
-
-        let detail = result['detail']
-        let info = ""
-
-        " guru gives different information based on the detail mode. Let try to
-        " extract the most useful information
-
-        if detail == "value"
-            if !has_key(result, 'value')
-                call go#util#EchoError("value key is missing. Please open a bug report on vim-go repo.")
-                return
-            endif
-
-            let val = result["value"]
-            if !has_key(val, 'type')
-                call go#util#EchoError("type key is missing (value.type). Please open a bug report on vim-go repo.")
-                return
-            endif
-
-            let info  = val["type"]
-        elseif detail == "type"
-            if !has_key(result, 'type')
-                call go#util#EchoError("type key is missing. Please open a bug report on vim-go repo.")
-                return
-            endif
-
-            let type = result["type"]
-            if !has_key(type, 'type')
-                call go#util#EchoError("type key is missing (type.type). Please open a bug report on vim-go repo.")
-                return
-            endif
-
-            let info  = type["type"]
-        elseif detail == "package"
-            if !has_key(result, 'package')
-                call go#util#EchoError("package key is missing. Please open a bug report on vim-go repo.")
-                return
-            endif
-
-            let package = result["package"]
-            if !has_key(package, 'path')
-                call go#util#EchoError("path key is missing (package.path). Please open a bug report on vim-go repo.")
-                return
-            endif
-
-            let info = printf("package %s", package["path"])
-        elseif detail == "unknown"
-            let info = result["desc"]
-        else
-            call go#util#EchoError(printf("unknown detail mode found '%s'. Please open a bug report on vim-go repo", detail))
-            return
-        endif
-
-        " All credits to fatih from the vim-go plugin for the code above
-        "---------------------------------------------------------------
-
+        let info = "func Println(a ...interface{}) (n int, err error)"
         "" get the return type
         let l:returnPart = strpart(info, stridx(info, ")")+2)
         " remove parenthesis '()' from the return part if any and split the types
@@ -949,7 +838,7 @@ function! Info()
         if isInner
             " left and right parts of the outer fucntion wraping the extracted one
             let leftPart = strpart(strpart(l:curLine, 0, col), 0, strridx(strpart(l:curLine, 0, col), '(')+1)
-            let rightPart = strpart(l:curLine, col + stridx(strpart(l:curLine, col), ")")+1)
+            let rightPart = strpart(l:curLine, col + stridx(strpart(l:curLine, col), ")"))
             call append('.', '') " append new line
             " set the extracted function call on the current line
             call setline(".", l:lineOffset . ret . " := " . strpart(l:strippedLine, len(leftPart)-1, len(l:curLine) - len(leftPart) - len(rightPart)))
@@ -965,18 +854,7 @@ function! Info()
             call setline(".", l:lineOffset . ret . " := " . l:strippedLine)
             normal! j
         endif
-    endfunction
 
-    let l:args = {
-                \ 'mode': 'describe',
-                \ 'format': 'json',
-                \ 'selected': -1,
-                \ 'needs_scope': 0,
-                \ 'custom_parse': function('s:info'),
-                \ 'disable_progress': 1,
-                \ }
-
-    call s:sync_guru(l:args)
 endfunction
 imap <F3> <C-O>:call Info()<CR>
 "---extract golang variable

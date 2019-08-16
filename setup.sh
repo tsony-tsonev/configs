@@ -2,8 +2,7 @@
 # install vim
 sudo apt-get -y remove vim vim-runtime gvim
 # install deps for manually building vim
-sudo apt-get -y install liblua5.1-dev luajit libluajit-5.1 python-dev ruby-dev
-libperl-dev libncurses5-dev libatk1.0-dev libx11-dev libxpm-dev libxt-dev python2.7 python3.6 python-pip python3-pip
+sudo apt-get -y install liblua5.1-dev luajit libluajit-5.1 python-dev ruby-dev libperl-dev libncurses5-dev libatk1.0-dev libx11-dev libxpm-dev libxt-dev python2.7 python3.6 python-pip python3-pip libgnome2-dev libgnomeui-dev libgtk2.0-dev  libbonoboui2-dev libcairo2-dev
 sudo mkdir /usr/include/lua5.1/include
 sudo cp /usr/include/lua5.1/* /usr/include/lua5.1/include
 git clone https://github.com/vim/vim.git
@@ -21,12 +20,12 @@ make distclean
 	    	--enable-luainterp=yes \
             --with-luajit \
             --with-lua-prefix=/usr/include/lua5.1 \
-            --enable-gui=gtk2 \
+            --enable-gui=auto \
             --enable-largefile \
             --enable-fail-if-missing \
             --enable-cscope \
             --prefix=/usr/local
-make VIMRUNTIMEDIR=/usr/local/share/vim/vim81
+sudo make VIMRUNTIMEDIR=/usr/local/share/vim/vim81
 sudo make install
 cd ..
 sudo rm -rf vim

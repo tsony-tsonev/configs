@@ -54,7 +54,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colorize cp history mosh mongodb kubectl zsh-autosuggestions zsh-syntax-highlighting zsh-navigation-tools)
+plugins=(git colorize cp history mosh mongodb kubectl zsh-autosuggestions zsh-syntax-highlighting zsh-navigation-tools web-search)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -107,7 +107,7 @@ zle -N customFuncExample_widget customFuncExample
 #bind the func to key
 bindkey '\ew' customFuncExample_widget
 #double escape press for cancel autocomplete
-bindkey '\e\e' send-break
+bindkey '\e\e' autosuggest-clear
 
 ### zsh-autosuggestions ###
 #autosuggest-accept: Accepts the current suggestion.
@@ -124,6 +124,18 @@ bindkey '^R' zaw-history
 zstyle ':filter-select' max-lines 10
 zstyle ':filter-select' hist-find-no-dups yes # ignore duplicates in history source
 zstyle ':filter-select' escape-descriptions no # display literal newlines, not \n, etc
+
+#navigation
+d='dirs -v | head -10'
+1='cd -'
+2='cd -2'
+3='cd -3'
+4='cd -4'
+5='cd -5'
+6='cd -6'
+7='cd -7'
+8='cd -8'
+9='cd -9'
 
 # VIM PATHOGEN export import update plugins
 alias vplug-update=" ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} pull"
