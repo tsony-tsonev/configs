@@ -8,14 +8,14 @@ sudo cp /usr/include/lua5.1/* /usr/include/lua5.1/include
 git clone https://github.com/vim/vim.git
 cd vim
 sudo make uninstall # remove previous custom builds if any
+# pay attention here check if directories are correct
 make distclean
 ./configure --with-features=huge \
             --enable-multibyte \
 	    	--enable-rubyinterp=yes \
 	    	--enable-pythoninterp=yes \
-	    	--with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu \ # pay attention here check directory correct
 	    	--enable-python3interp=yes \
-	    	--with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu \ # pay attention here check directory correct
+	    	--with-python3-config-dir=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu \ 
 	    	--enable-perlinterp=yes \
 	    	--enable-luainterp=yes \
             --with-luajit \
@@ -30,7 +30,9 @@ sudo make install
 cd ..
 sudo rm -rf vim
 #install neovim-bridge for the autocomplete
-pip3 install neovim
+sudo apt-get install -y python3-setuptools
+pip install wheel
+pip install neovim
 go get -u github.com/mdempsky/gocode
 # install and change to zsh
 sudo apt-get -y install zsh
