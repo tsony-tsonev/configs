@@ -145,105 +145,105 @@ map <F7> gg=G<C-o><C-o>
 "--------------TEXT EDITING----------------
 "------INSERT MODE
 "---LETTER KEYS--- sorted Q-P A-L Z-M
-"show/close go doc
-inoremap QQ <C-O>:GoDoc<CR>
-"select word, then + or - to expand shrint selection (vim-expand-region required)
-" inoremap WW <C-O>:normal +<CR>
-" switch window with WW + plus direction h/j/k/l
-inoremap WW <C-O><C-W>
-"go to end of word
-inoremap EE <Esc>ea
-"redo
-inoremap RR <Esc><C-R>a
-"run test (neads vim-test plugin)
-":TestFile :TestSuite :TestLast :TestVisit
-inoremap TT <C-O>:TestNearest<CR>
-" CUSOMT remove if not used
-inoremap Tt <C-O>:TestNearest -config=`pwd`/config-local.json<CR>
-"copy line
-inoremap YY <Esc>yya
-"undo
-inoremap UU <C-O>u
-"go to begin of line
-inoremap II <Esc>I
-"create new line one the next row
-inoremap OO <Esc>o
-"paste
-inoremap PP <Esc>pa
-"go to end of line
-inoremap AA <Esc>A
-"delete whole line and stay on it
-inoremap SS <Esc>S
-"delete line
-inoremap DD <Esc>ddi
-" forward and backward search
-inoremap FF <C-O>f
-inoremap Ff <C-O>F
-" golang rename variable
-inoremap GG <C-O>:GoRename<CR>
-" go to definition
-inoremap HH <C-O>:GoDef<CR>
-"move line down
-inoremap JJ <Esc>:m .+1<CR>==gi
-" move line up
-inoremap KK <Esc>:m .-2<CR>==gi
-" find implements or implementators
-inoremap LL <C-O>:GoImplements<CR>
-" switch opened windows
-inoremap ZZ <C-O><C-W><C-W>
-"forward delete
-inoremap XX <Esc>lxi
-"delete from cursor to the EOL
-inoremap CC <Esc>ld$a
-"enter visual than go back to insert mode
-inoremap VV <C-O>v
-"go to begin of word
-inoremap BB <C-O>b
-" find usages
-inoremap NN <C-O>:GoCallers<CR>
-"create mark
-inoremap MM <C-O>m
-"---LETTER KEYS---
-"quick command
-inoremap :: <C-O>:
-"go to mark
-inoremap ;; <C-O>'
-"switch last buffers in insert mode
-inoremap <C-^> <Esc> <C-^>i
-" fold toggle, fold all, unfolf all
-inoremap ;za <Esc>zajA
-inoremap ;zm <Esc>zmjA
-inoremap ;zr <Esc>zrkkA
-" delete/next/previous buffer
-inoremap ;bd <Esc>:bp<CR>:bd #<CR>i
-inoremap ;bn <C-O>:bn<CR>
-inoremap ;bp <C-O>:bp<CR>
-"force close buffer (not saving changes)
-"switch to previous buffer and then closing it due to bug with NERDTree
-inoremap ;bdx <Esc>:bp<CR>:bd! #<CR>i
-"write, write and close buffer
-inoremap ;bw <C-O>:w<CR>
-inoremap ;bwd <C-O>:w\|bd<CR>
-"go to top and bottom of file
-inoremap ;gg <C-O>gg
-inoremap ;G <C-O>G
-" switch from test to source and the opposite
-inoremap ;T <Esc>:GoAlternate<CR>a
-" close window
-inoremap ;qq <C-O><C-W>c
-" quick search
-inoremap ;/ <Esc>/
-" search with ack
-inoremap ;ac <Esc>:Ack!
-" togge nerd tree
-inoremap !! <Esc>:NERDTreeToggle<CR><C-W>la
-
-"Move up and down in autocomplete with <c-j> and <c-k>
-" autocmd VimEnter * inoremap <expr> <c-h> ("\<Left>")
-inoremap <expr> <c-k> ("\<Up>")
-inoremap <expr> <c-j> ("\<Down>")
-" inoremap <expr> <c-h> ("\<Left>") "overriden by vim backspace
-inoremap <expr> <c-l> ("\<Right>")
+" "show/close go doc
+" inoremap QQ <C-O>:GoDoc<CR>
+" "select word, then + or - to expand shrint selection (vim-expand-region required)
+" " inoremap WW <C-O>:normal +<CR>
+" " switch window with WW + plus direction h/j/k/l
+" inoremap WW <C-O><C-W>
+" "go to end of word
+" inoremap EE <Esc>ea
+" "redo
+" inoremap RR <Esc><C-R>a
+" "run test (neads vim-test plugin)
+" ":TestFile :TestSuite :TestLast :TestVisit
+" inoremap TT <C-O>:TestNearest<CR>
+" " CUSOMT remove if not used
+" inoremap Tt <C-O>:TestNearest -config=`pwd`/config-local.json<CR>
+" "copy line
+" inoremap YY <Esc>yya
+" "undo
+" inoremap UU <C-O>u
+" "go to begin of line
+" inoremap II <Esc>I
+" "create new line one the next row
+" inoremap OO <Esc>o
+" "paste
+" inoremap PP <Esc>pa
+" "go to end of line
+" inoremap AA <Esc>A
+" "delete whole line and stay on it
+" inoremap SS <Esc>S
+" "delete line
+" inoremap DD <Esc>ddi
+" " forward and backward search
+" inoremap FF <C-O>f
+" inoremap Ff <C-O>F
+" " golang rename variable
+" inoremap GG <C-O>:GoRename<CR>
+" " go to definition
+" inoremap HH <C-O>:GoDef<CR>
+" "move line down
+" inoremap JJ <Esc>:m .+1<CR>==gi
+" " move line up
+" inoremap KK <Esc>:m .-2<CR>==gi
+" " find implements or implementators
+" inoremap LL <C-O>:GoImplements<CR>
+" " switch opened windows
+" inoremap ZZ <C-O><C-W><C-W>
+" "forward delete
+" inoremap XX <Esc>lxi
+" "delete from cursor to the EOL
+" inoremap CC <Esc>ld$a
+" "enter visual than go back to insert mode
+" inoremap VV <C-O>v
+" "go to begin of word
+" inoremap BB <C-O>b
+" " find usages
+" inoremap NN <C-O>:GoCallers<CR>
+" "create mark
+" inoremap MM <C-O>m
+" "---LETTER KEYS---
+" "quick command
+" inoremap :: <C-O>:
+" "go to mark
+" inoremap ;; <C-O>'
+" "switch last buffers in insert mode
+" inoremap <C-^> <Esc> <C-^>i
+" " fold toggle, fold all, unfolf all
+" inoremap ;za <Esc>zajA
+" inoremap ;zm <Esc>zmjA
+" inoremap ;zr <Esc>zrkkA
+" " delete/next/previous buffer
+" inoremap ;bd <Esc>:bp<CR>:bd #<CR>i
+" inoremap ;bn <C-O>:bn<CR>
+" inoremap ;bp <C-O>:bp<CR>
+" "force close buffer (not saving changes)
+" "switch to previous buffer and then closing it due to bug with NERDTree
+" inoremap ;bdx <Esc>:bp<CR>:bd! #<CR>i
+" "write, write and close buffer
+" inoremap ;bw <C-O>:w<CR>
+" inoremap ;bwd <C-O>:w\|bd<CR>
+" "go to top and bottom of file
+" inoremap ;gg <C-O>gg
+" inoremap ;G <C-O>G
+" " switch from test to source and the opposite
+" inoremap ;T <Esc>:GoAlternate<CR>a
+" " close window
+" inoremap ;qq <C-O><C-W>c
+" " quick search
+" inoremap ;/ <Esc>/
+" " search with ack
+" inoremap ;ac <Esc>:Ack!
+" " togge nerd tree
+" inoremap !! <Esc>:NERDTreeToggle<CR><C-W>la
+"
+" "Move up and down in autocomplete with <c-j> and <c-k>
+" " autocmd VimEnter * inoremap <expr> <c-h> ("\<Left>")
+" inoremap <expr> <c-k> ("\<Up>")
+" inoremap <expr> <c-j> ("\<Down>")
+" " inoremap <expr> <c-h> ("\<Left>") "overriden by vim backspace
+" inoremap <expr> <c-l> ("\<Right>")
 "------INSERT MODE
 "--------------TEXT EDITING----------------
 
@@ -442,7 +442,7 @@ function! s:syncTree()
     endif
 endfunction
 " sync nerd tree to highlight the opened buffer only if tree is opened
-autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1) | call s:syncTree() | endif
+" autocmd BufEnter * if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1) | call s:syncTree() | endif
 "------------NERD-TREE--------------
 
 "------------DEOPLETE----------------

@@ -138,26 +138,56 @@ d='dirs -v | head -10'
 9='cd -9'
 
 # VIM PATHOGEN export import update plugins
-alias vplug-update=" ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} pull"
+alias vplug-update="ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} pull"
+alias vplug-import='curDir=`pwd`; echo $curDir && cd ~/.vim/bundle && git_bulk_clone_from_file ~/vim-plugins && echo $curDir && cd $curDir'
 alias vplug-export="ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} remote -v | sed 's/^origin//' | sed 's/(fetch)*$//' | sed 's/(push)*$//' | uniq | sed 's/^[ \t ]*//;s/[ \t ]*$//' > vim-plugins"
-function gitBulkClone {
-    curDir=`pwd`
-    cd ~/.vim/bundle
-    while read repo; do
-        git clone "$repo"
-    done < ~/vim-plugins
-    cd $curDir
-}
-alias vplug-import=gitBulkClone
+
 # depends on python-pygments
 # alias cat="colorize"
 alias cat="colorize_via_pygmentize"
+
+# instead of alias which require complex char escaping use function
+# top process names by memory usage
+mtop() {
+    ps axo rss,comm,pid | awk '{ proc_list[$2]++; proc_list[$2 "," 1] += $1;  } END { for (proc in proc_list) { printf("%d\t%s\n", proc_list[proc "," 1],proc);  } }' | sort -n | tail -n 10 | sort -rn | awk '{$1/=1024;printf "%.0fMB\t",$1}{print $2}'
+}
+
+# clone multiple repositories form file
+function git_bulk_clone_from_file {
+    while read repo; do
+        git clone $repo
+    done < $1
+}
+# pass ownUserName orgName accToken
+function gh_clone_org {
+    repos=$(curl -u $1 -s "https://api.github.com/orgs/$2/repos?access_token=$3&per_page=1000" | grep ssh_url |awk '{print $2}'| sed 's/"\(.*\)",/\1/')
+    echo $repos > org_repos
+    git_bulk_clone_from_file "org_repos"
+    rm org_repos
+}
+# pass userName
+function gh_clone_org {
+    repos=$(curl -s "https://api.github.com/users/$1/repos?per_page=1000" | grep ssh_url |awk '{print $2}'| sed 's/"\(.*\)",/\1/')
+    echo $repos > usr_repos
+    git_bulk_clone_from_file "usr_repos"
+    rm usr_repos
+}
+# pass ownUseName accToken
+function gh_clone_usr_own {
+    repos=$(curl -u $1 -s "https://api.github.com/user/repos?access_token=$2&per_page=1000" | grep ssh_url |awk '{print $2}'| sed 's/"\(.*\)",/\1/')
+    echo $repos > own_usr_repos
+    git_bulk_clone_from_file "own_usr_repos"
+    rm own_usr_repos
+}
+
+# add upstrams to all repos in a dir
+# for dir in */ ; do cd $dir; git remote add upstream "`git remote -v | sed 's/tsony-tsonev/taxime-hq/g' | sed -e 's/.*\(git@.*\) .*/\1/' | head -1`"; cd .. ; done
 
 
 #Go
 export GOPATH=$HOME/workspace/go
 export GOROOT=$HOME/development/go
 export PROTOC=$HOME/development/protoc/bin
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$PROTOC
+# export PATH=$PATH:$GOPATH/bin:$PROTOC
 
 export GO111MODULE=on
