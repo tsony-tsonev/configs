@@ -71,12 +71,6 @@ set wrap
 set textwidth=79
 set formatoptions=qrn1
 
-" Folding
-set nofoldenable
-set foldmethod=indent
-set foldnestmax=1
-set foldlevel=2
-
 " persistend undo
 set undofile                " Save undos after file closes
 " note create dir manually
@@ -250,10 +244,18 @@ map <F7> gg=G<C-o><C-o>
 "----------NERDTree Git------------
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1  "enables nodes icons
 let g:DevIconsEnableFoldersOpenClose = 1 "enables different icon for expandable/not expandable icons
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:WebDevIconsNerdTreeBeforeGlyphPadding = ' '
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' ' "symbo after the icon
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ' ' "symbol before the icon
 let g:NERDTreeDirArrowExpandable = nr2char(8200)  "sets expandable character to none - hides it
 let g:NERDTreeDirArrowCollapsible = nr2char(8200)  "sets collapsible character to none - hides it
+augroup nerdtree
+  autocmd!
+  autocmd FileType nerdtree syntax clear NERDTreeFlags
+  autocmd FileType nerdtree syntax match hideBracketsInNerdTree "\]" contained conceal containedin=ALL
+  autocmd FileType nerdtree syntax match hideBracketsInNerdTree "\[" contained conceal containedin=ALL
+  autocmd FileType nerdtree setlocal conceallevel=3
+  autocmd FileType nerdtree setlocal concealcursor=nvic
+augroup END
 
 " nerdtree highlight not only icons but also file names
 let g:NERDTreeFileExtensionHighlightFullName = 1
@@ -438,7 +440,7 @@ function! s:syncTree()
     if (winnr("$") > 1)
         let s:curwnum = winnr()
         NERDTreeFind
-        exec s:curwnum . "wincmd w"
+        
     endif
 endfunction
 " sync nerd tree to highlight the opened buffer only if tree is opened
@@ -449,11 +451,13 @@ endfunction
 set nocompatible
 " disable the preview window
 "set completeopt+=preview
-let g:python3_host_skip_check = 1
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
+let g:python3_host_skip_check = 1
+call deoplete#custom#option('enable_smart_case', 1)
+call deoplete#custom#option('omni_patterns', {'go': '[^. *\t]\.\w*'})
+
 let g:python3_host_prog = substitute(system('which python3.6'), '^\s*\(.\{-}\)\s*\n\+$', '\1', '')
-" let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 
 " let g:deoplete#sources#go#source_importer = 1
 let g:deoplete#sources#go#unimported_packages = 1
@@ -461,7 +465,6 @@ let g:deoplete#sources#go#sort_class = ['package', 'func', 'var', 'const', 'type
 let g:deoplete#sources#go#builtin_objects = 1
 
 " let g:deoplete#sources#go = ['vim-go']
-" let g:deoplete#sources#go#gocode_binary = '/dev/null'
 
 " fix neopairs closing the parenthesis
 let g:neopairs#enable = 1
@@ -541,27 +544,6 @@ nmap <leader>- <Plug>AirlineSelectPrevTab
 nmap <leader>+ <Plug>AirlineSelectNextTab
 "---------VIM-AIRLINE-----------
 
-"--------FOLD----------
-set foldmethod=syntax
-set foldcolumn=0
-
-" Minimal style for folded code
-function! MyFoldText() " {{{
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth 
-    let foldedlinecount = v:foldend - v:foldstart
-
-    let line = getline(v:foldstart)
-    let lastLine = getline(v:foldend)
-    let lastLineLastChar = lastLine[len(lastLine)-1]
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - len("⊞ ...") - len("⇲")
-
-    " ☟ ⚶  ⊎ ≻ ≺ ⇲ ↯ ⚞ ⚟
-    return "⊞ " . line . '...' . lastLineLastChar . repeat(" ", fillcharcount) . foldedlinecount . '⇲ '
-
-endfunction " }}}
-set foldtext=MyFoldText()
-"---------FOLD----------
 
 "---------TAG-BAR----------
 map <C-t> :TagbarToggle<CR>
@@ -861,6 +843,33 @@ imap <F3> <C-O>:call Info()<CR>
 "
 "------------SNIPPETS----------
 
+"--------FOLD----------
+set nofoldenable
+" set foldcolumn=0
+" set foldlevel=2
+set foldmethod=syntax
+set foldnestmax=1
+let g:go_fmt_experimental = 1
+
+
+" Minimal style for folded code
+function! MyFoldText() " {{{
+    let nucolwidth = &fdc + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth 
+    let foldedlinecount = v:foldend - v:foldstart
+
+    let line = getline(v:foldstart)
+    let lastLine = getline(v:foldend)
+    let lastLineLastChar = lastLine[len(lastLine)-1]
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - len("⊞ ...") - len("⇲")
+
+    " ☟ ⚶  ⊎ ≻ ≺ ⇲ ↯ ⚞ ⚟
+    return "⊞ " . line . '...' . lastLineLastChar . repeat(" ", fillcharcount) . foldedlinecount . '⇲ '
+
+endfunction " }}}
+set foldtext=MyFoldText()
+
 "fix folded code highlight - this line must at the end of script, 
 "because it is overridden by some of the rest of the plugins
 hi! link Folded SignColumn
+"---------FOLD----------
