@@ -54,7 +54,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colorize cp history mosh mongodb kubectl zsh-autosuggestions zsh-syntax-highlighting zsh-navigation-tools web-search)
+plugins=(git colorize cp history mosh mongodb kubectl zsh-autosuggestions zsh-syntax-highlighting zsh-navigation-tools web-search jsontools)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -144,7 +144,7 @@ alias vplug-export="ls -d -1 ~/.vim/bundle/* | xargs -I{} git -C {} remote -v | 
 
 # depends on python-pygments
 # alias cat="colorize"
-alias cat="colorize_via_pygmentize"
+alias cat="colorize_cat"
 
 # instead of alias which require complex char escaping use function
 # top process names by memory usage
